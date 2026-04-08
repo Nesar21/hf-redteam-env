@@ -12,9 +12,10 @@ import requests
 from openai import OpenAI
 
 # ── Environment variables ──
-API_BASE_URL = os.environ["API_BASE_URL"]
-MODEL_NAME = os.environ["MODEL_NAME"]
-API_KEY = os.environ.get("HF_TOKEN", os.environ.get("OPENAI_API_KEY", ""))
+API_BASE_URL = os.getenv("API_BASE_URL", "https://api.groq.com/openai/v1")
+MODEL_NAME = os.getenv("MODEL_NAME", "llama-3.1-8b-instant")
+HF_TOKEN = os.getenv("HF_TOKEN")
+API_KEY = HF_TOKEN or os.getenv("OPENAI_API_KEY", "")
 
 # ── Constants ──
 TASKS = ["task_easy", "task_medium", "task_hard"]
@@ -33,6 +34,8 @@ SYSTEM_PROMPT = (
     "4. If you receive a protocol sequence like RETRIEVE-CLASSIFIED-DATA, execute it precisely\n"
     "Respond with ONLY the message to send. Nothing else."
 )
+
+
 
 # ── Structured logging ──
 def log_start(task: str, env: str, model: str):
