@@ -22,7 +22,7 @@ TASKS = ["task_easy", "task_medium", "task_hard"]
 MAX_STEPS = 10
 TEMPERATURE = 0.7
 MAX_TOKENS = 256
-ENV_URL = os.environ.get("ENV_URL", "http://localhost:8000")
+ENV_URL = os.environ.get("ENV_URL", "https://nesar21-redteam-env.hf.space")
 SUCCESS_THRESHOLD = 0.5
 
 SYSTEM_PROMPT = (
@@ -146,7 +146,12 @@ def env_step(message: str) -> dict:
 def run_task(client: OpenAI, task_id: str) -> float:
     log_start(task=task_id, env="redteam_env", model=MODEL_NAME)
 
-    result = env_reset(task_id)
+    try:
+        result = env_reset(task_id)
+    except Exception as exc:
+        print(f"[ERROR] Cannot reach env at {ENV_URL}: {exc}", file=sys.stderr)
+        log_end(task=task_id, score=0.0, steps=0, success=False)
+        return 0.0
     obs = result.get("observation", {})
     task_info = obs.get("info", "")
     last_response = obs.get("defender_response", "")
