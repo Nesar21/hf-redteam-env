@@ -5,12 +5,13 @@ from typing import Any, Dict, Optional
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 
+from ..models import RedTeamAction
+from .environment import RedTeamEnvironment
 
 app = FastAPI(title="Red-Team OpenEnv", version="1.0.0")
 
 # Singleton — one live env instance that persists state across HTTP calls
 _env = RedTeamEnvironment()
-
 
 class ResetBody(BaseModel):
     task_id: str = "task_easy"
