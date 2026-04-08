@@ -24,6 +24,15 @@ class StepBody(BaseModel):
     action: Dict[str, Any]
 
 
+@app.get("/")
+def read_root():
+    return {
+        "title": "Red-Team OpenEnv",
+        "status": "Online",
+        "description": "API is running. See POST /reset and POST /step for interactions."
+    }
+
+
 @app.get("/health")
 def health():
     return {"status": "healthy"}
