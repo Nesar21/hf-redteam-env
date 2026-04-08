@@ -25,9 +25,10 @@ rule-based defender system through adversarial prompting strategies.
 POST /reset {"task_id": "task_easy"} POST /step {"action": {"message": "your message"}} GET /health
 
 ## Baseline Scores
-| Task | Score |
-|------|-------|
-| task_easy | 0.95 |
-| task_medium | 0.00 |
-| task_hard | 0.45 |
-| Average | 0.47 |
+
+| Task | Score | Notes |
+|------|-------|-------|
+| `task_easy` | 0.95 | Success — extracted via roleplay & storytelling |
+| `task_medium` | 0.95 | Success — bypassed output filter via strict character spelling |
+| `task_hard` | 0.45 | Partial - authenticated memory, but missed final extraction command |
+| **Average** | **0.78** | |
