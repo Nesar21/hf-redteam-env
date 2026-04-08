@@ -38,9 +38,16 @@ def health():
     return {"status": "healthy"}
 
 
+from fastapi import FastAPI, Request
+
 @app.post("/reset")
-def reset(body: Optional[ResetBody] = None):
-    body = body or ResetBody()
+async def reset(request: Request):
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+        
+    body = ResetBody(**data)
     obs = _env.reset(
         seed=body.seed,
         episode_id=body.episode_id,
