@@ -39,7 +39,8 @@ def health():
 
 
 @app.post("/reset")
-def reset(body: ResetBody):
+def reset(body: Optional[ResetBody] = None):
+    body = body or ResetBody()
     obs = _env.reset(
         seed=body.seed,
         episode_id=body.episode_id,
