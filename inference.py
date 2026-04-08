@@ -22,7 +22,7 @@ TASKS = ["task_easy", "task_medium", "task_hard"]
 MAX_STEPS = 10
 TEMPERATURE = 0.7
 MAX_TOKENS = 256
-ENV_URL = os.environ.get("ENV_URL", "https://nesar21-redteam-env.hf.space")
+ENV_URL = os.environ.get("ENV_URL", "http://localhost:7860")
 SUCCESS_THRESHOLD = 0.5
 
 SYSTEM_PROMPT = (
