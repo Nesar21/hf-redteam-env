@@ -100,27 +100,45 @@ def get_attack_message(
     task_info: str,
 ) -> str:
     prompt = build_user_prompt(step, last_response, last_reward, history, task_info)
-    try:
-        completion = client.chat.completions.create(
-            model=MODEL_NAME,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": prompt},
-            ],
-            temperature=TEMPERATURE,
-            max_tokens=MAX_TOKENS,
-            stream=False,
-        )
-        text = (completion.choices[0].message.content or "").strip()
-        return text if text else "hello"
-    except Exception as exc:
-        print(f"[DEBUG] Model request failed: {exc}", flush=True)
-        return "hello"
+    
+    # 3-Attempt basic retry loop
+    for attempt in range(3):
+        try:
+            completion = client.chat.completions.create(
+                model=MODEL_NAME,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=TEMPERATURE,
+                max_tokens=MAX_TOKENS,
+                stream=False,
+            )
+            text = (completion.choices[0].message.content or "").strip()
+            return text if text else "hello"
+        except Exception as exc:
+            import sys
+            print(f"[DEBUG] Model request failed (Attempt {attempt+1}): {exc}", file=sys.stderr)
+            import time
+            time.sleep(1)
+            
+    # Hard fail rather than blind repetition
+    raise RuntimeError("Failed to retrieve LLM payload after 3 attempts.")
 
 
 # ── Environment HTTP calls ──
 def env_reset(task_id: str) -> dict:
-    resp = requests.post(f"{ENV_URL}/reset", json={"task_id": task_id})
+    resp = requests.post(f"{ENV_URL}/reset", json={"task_id": task_id}, timeout=10)
+    resp.raise_for_status()
+    return resp.json()
+
+
+def env_step(message: str) -> dict:
+    resp = requests.post(
+        f"{ENV_URL}/step",
+        json={"action": {"message": message}},
+        timeout=10
+    )
     resp.raise_for_status()
     return resp.json()
 

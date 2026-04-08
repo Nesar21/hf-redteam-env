@@ -1,12 +1,12 @@
 """FastAPI application — stateful singleton for Red-Team Environment."""
 
+"""FastAPI application — stateful singleton for Red-Team Environment."""
+import logging
 from typing import Any, Dict, Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 
-from ..models import RedTeamAction
-from .environment import RedTeamEnvironment
 
 app = FastAPI(title="Red-Team OpenEnv", version="1.0.0")
 
@@ -44,7 +44,8 @@ from fastapi import FastAPI, Request
 async def reset(request: Request):
     try:
         data = await request.json()
-    except Exception:
+    except Exception as e:
+        logging.warning(f"Malformed /reset payload received (returning default state). Error: {e}")
         data = {}
         
     body = ResetBody(**data)
