@@ -203,7 +203,7 @@ def run_task(client: OpenAI, task_id: str) -> float:
         if done:
             break
 
-    score   = min(max(max(rewards) if rewards else 0.0, 0.0), 1.0)
+    score   = min(max(max(rewards) if rewards else 0.01, 0.01), 0.99)
     success = score >= SUCCESS_THRESHOLD
 
     log_end(task=task_id, score=score, steps=steps_taken, success=success, rewards=rewards)
