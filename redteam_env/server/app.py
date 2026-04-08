@@ -1,6 +1,4 @@
 """FastAPI application — stateful singleton for Red-Team Environment."""
-
-"""FastAPI application — stateful singleton for Red-Team Environment."""
 import logging
 from typing import Any, Dict, Optional
 
@@ -36,9 +34,6 @@ def read_root():
 @app.get("/health")
 def health():
     return {"status": "healthy"}
-
-
-from fastapi import FastAPI, Request
 
 @app.post("/reset")
 async def reset(request: Request):

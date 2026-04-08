@@ -132,7 +132,6 @@ def env_reset(task_id: str) -> dict:
     resp.raise_for_status()
     return resp.json()
 
-
 def env_step(message: str) -> dict:
     resp = requests.post(
         f"{ENV_URL}/step",
@@ -142,17 +141,8 @@ def env_step(message: str) -> dict:
     resp.raise_for_status()
     return resp.json()
 
-
-def env_step(message: str) -> dict:
-    resp = requests.post(
-        f"{ENV_URL}/step",
-        json={"action": {"message": message}},
-    )
-    resp.raise_for_status()
-    return resp.json()
-
-
 # ── Run one task ──
+
 def run_task(client: OpenAI, task_id: str) -> float:
     log_start(task=task_id, env="redteam_env", model=MODEL_NAME)
 
